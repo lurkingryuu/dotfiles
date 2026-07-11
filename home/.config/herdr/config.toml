@@ -1,5 +1,6 @@
 [keys]
 prefix = "ctrl+b"
+detach = "prefix+d"  # tmux-style detach (herdr's default is prefix+q)
 focus_pane_left  = "prefix+h"
 focus_pane_down  = "prefix+j"
 focus_pane_up    = "prefix+k"
