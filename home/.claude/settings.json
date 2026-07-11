@@ -1,11 +1,14 @@
 {
-  "theme": "dark-ansi",
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty'); if [ -n \"$used\" ]; then printf \"%s | ctx: %.0f%% used\" \"$model\" \"$used\"; else printf \"%s\" \"$model\"; fi"
   },
-  "permissions": {
-    "defaultMode": "auto"
+  "enabledPlugins": {
+    "warp@claude-code-warp": true
   },
   "extraKnownMarketplaces": {
     "claude-code-warp": {
@@ -17,8 +20,6 @@
   },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
-  "enabledPlugins": {
-    "warp@claude-code-warp": true
-  }
+  "theme": "dark-ansi",
+  "skipAutoPermissionPrompt": true
 }

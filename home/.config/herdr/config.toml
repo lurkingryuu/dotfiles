@@ -1,3 +1,4 @@
+onboarding = false
 [keys]
 prefix = "ctrl+b"
 detach = "prefix+d"  # tmux-style detach (herdr's default is prefix+q)

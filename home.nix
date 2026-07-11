@@ -74,18 +74,50 @@ in
   # so Ctrl+Left / Ctrl+Right did nothing. -dict-add merges only entries 79-82
   # and leaves the rest of AppleSymbolicHotKeys (Spotlight, screenshots, input
   # switching, ...) untouched. Params: (ASCII=65535 for arrows, keycode
-  # 123=Left/124=Right, modifier 262144=Ctrl / 393216=Ctrl+Shift).
+  # 123=Left/124=Right, modifier).
+  #
+  # The modifier MUST include the Fn bit (0x800000 = 8388608). macOS treats the
+  # arrow keys as function keys, so a real Ctrl+Left keystroke arrives with flags
+  # Control|Fn. A binding of plain Control (262144) never matches it, so the
+  # shortcut silently does nothing - that was the original bug. The correct
+  # values are Control+Fn = 8650752 (0x840000) and Shift+Control+Fn = 8781824
+  # (0x860000). (`activateSettings -u` re-canonicalizes a plain-Control value by
+  # adding Fn, which is why it appeared to "fix itself" once - don't rely on that;
+  # write the matching value here.)
   home.activation.spaceSwitchHotkeys =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # WindowServer stores these parameters as *integers*. `defaults write
+      # -dict-add "{parameters=(65535,...)}"` parses the old-style ASCII plist,
+      # where every unquoted scalar becomes a *string* ("65535"), and a
+      # string-typed binding is silently ignored - that's the real reason
+      # Ctrl+Arrow dies. Export the domain, splice in properly typed JSON with
+      # plutil (JSON numbers -> plist integers), then import it back through
+      # cfprefsd so the live store WindowServer arms from is updated.
+      plist="$(/usr/bin/mktemp -t symbolichotkeys)"
+      /usr/bin/defaults export com.apple.symbolichotkeys "$plist" 2>/dev/null \
+        || printf '<?xml version="1.0"?><plist version="1.0"><dict/></plist>' > "$plist"
+      # Ensure the parent dict exists before writing nested keypaths, without
+      # clobbering any hotkeys already present.
+      /usr/bin/plutil -extract AppleSymbolicHotKeys json -o /dev/null "$plist" 2>/dev/null \
+        || /usr/bin/plutil -replace AppleSymbolicHotKeys -json '{}' "$plist"
       hk() {
-        $DRY_RUN_CMD /usr/bin/defaults write com.apple.symbolichotkeys.plist \
-          AppleSymbolicHotKeys -dict-add "$1" \
-          "{enabled=1;value={parameters=($2,$3,$4);type=standard;};}"
+        $DRY_RUN_CMD /usr/bin/plutil -replace "AppleSymbolicHotKeys.$1" -json \
+          "{\"enabled\":1,\"value\":{\"type\":\"standard\",\"parameters\":[$2,$3,$4]}}" \
+          "$plist"
       }
-      hk 79 65535 123 262144   # Ctrl+Left        -> move left a space
-      hk 80 65535 123 393216   # Ctrl+Shift+Left  -> move left a space with window
-      hk 81 65535 124 262144   # Ctrl+Right       -> move right a space
-      hk 82 65535 124 393216   # Ctrl+Shift+Right -> move right a space with window
+      hk 79 65535 123 8650752   # Ctrl+Left        -> move left a space
+      hk 80 65535 123 8781824   # Ctrl+Shift+Left  -> move left a space with window
+      hk 81 65535 124 8650752   # Ctrl+Right       -> move right a space
+      hk 82 65535 124 8781824   # Ctrl+Shift+Right -> move right a space with window
+      $DRY_RUN_CMD /usr/bin/defaults import com.apple.symbolichotkeys "$plist"
+      /bin/rm -f "$plist"
+      # This activation writes the hotkey *values*, but binding them live and
+      # restarting the Dock/WindowServer (which own space switching) can't happen
+      # here: darwin-rebuild activation runs outside the logged-in GUI (Aqua)
+      # session, so `killall Dock` finds nothing ("No matching processes belonging
+      # to you"). The live re-apply is done in rebuild.sh instead, which runs in
+      # your interactive terminal - a real GUI session. activateSettings is safe
+      # to call from here though, so keep it as a best-effort rebind.
       $DRY_RUN_CMD /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
     '';
 

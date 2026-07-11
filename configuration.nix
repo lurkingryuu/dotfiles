@@ -21,9 +21,19 @@
       AppleShowAllExtensions = true;
     };
     dock.autohide = true;
+    WindowManager.StandardHideWidgets = true;    # hide widgets on desktop
+    WindowManager.StageManagerHideWidgets = true; # hide widgets in Stage Manager
     finder.FXPreferredViewStyle = "Nlsv";  # list view by default
     finder.CreateDesktop = false;          # clean desktop
     trackpad.Clicking = true;              # tap to click
+    # Swipe between spaces with four fingers - Apple's factory default and the
+    # conflict-free choice (three-finger swipes stay free for three-finger drag
+    # and Look Up). System Settings treats these two as mutually exclusive, so we
+    # pin four-finger on and three-finger horizontal off rather than leaving both
+    # enabled (a UI-unreachable state) or leaving it to a manual toggle a rebuild
+    # can knock out. Flip the two values to move the gesture to three fingers.
+    trackpad.TrackpadFourFingerHorizSwipeGesture = 2;
+    trackpad.TrackpadThreeFingerHorizSwipeGesture = 0;
   };
   nix-homebrew = {
     enable = true;
