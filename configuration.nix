@@ -28,10 +28,11 @@
   nix-homebrew = {
     enable = true;
     inherit user;
+    autoMigrate = true;  # adopt the pre-existing /opt/homebrew instead of erroring
   };
   homebrew = {
     enable = true;
-    onActivation.cleanup = "zap";  # remove anything not listed here
+    onActivation.cleanup = "none";  # keep apps not listed here (protects existing installs)
     onActivation.autoUpdate = true;
     onActivation.extraFlags = [ "--force" ];
     brews = [
