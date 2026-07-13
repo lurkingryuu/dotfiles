@@ -20,3 +20,7 @@ cycle_pane_next = "prefix+o"     # tmux-style prefix+o cycle to next pane
 [ui]
 # Agents panel order: explicit choice of "spaces" (grouped by space, the default) over "priority".
 agent_panel_sort = "spaces"
+
+show_agent_labels_on_pane_borders = true
+[ui.toast]
+delivery = "system"
