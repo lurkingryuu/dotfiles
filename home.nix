@@ -26,8 +26,8 @@ in
     LDFLAGS = "-L/opt/homebrew/opt/llvm/lib";
     CPPFLAGS = "-I/opt/homebrew/opt/llvm/include";
     BUN_INSTALL = "${config.home.homeDirectory}/.bun";
-    NVM_DIR = "${config.home.homeDirectory}/.nvm";
     MANPATH = "/opt/local/share/man:$MANPATH";
+    POETRY_VIRTUALENVS_IN_PROJECT = "true";
   };
 
   # Extra PATH entries beyond what nix/home-manager already put on PATH.
@@ -64,6 +64,13 @@ in
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
     syntaxHighlighting.enable = true;  # commands turn green when valid
+    # /bin/zsh and the Nix zsh used to overwrite the same ~/.zcompdump. Keep
+    # caches versioned so a shell upgrade cannot force a rebuild on every tab.
+    completionInit = ''
+      autoload -U compinit
+      mkdir -p "${config.xdg.cacheHome}/zsh"
+      compinit -d "${config.xdg.cacheHome}/zsh/zcompdump-$ZSH_VERSION"
+    '';
     profileExtra = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
       source ~/.orbstack/shell/init.zsh 2>/dev/null || :
@@ -71,49 +78,45 @@ in
     initContent = ''
       bindkey '^f' autosuggest-accept
 
-      # ===== conda (self-managed by `conda init`, not by Nix) =====
-      __conda_setup="$('${config.home.homeDirectory}/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-      if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-      elif [ -f "${config.home.homeDirectory}/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "${config.home.homeDirectory}/anaconda3/etc/profile.d/conda.sh"
-      fi
-      unset __conda_setup
-
-      # ===== nvm (self-managed, installed via the nvm Homebrew formula) =====
-      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-      [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+      # ===== conda (load its Python-backed shell hook only on first use) =====
+      conda() {
+        unfunction conda
+        if [ -r "${config.home.homeDirectory}/anaconda3/etc/profile.d/conda.sh" ]; then
+          source "${config.home.homeDirectory}/anaconda3/etc/profile.d/conda.sh"
+          conda "$@"
+        else
+          "${config.home.homeDirectory}/anaconda3/bin/conda" "$@"
+        fi
+      }
 
       # ===== zoxide: `z`/`zi` + cd override =====
       eval "$(zoxide init zsh)"
       alias cd="z"
       alias cdi="zi"
 
-      # ===== thefuck =====
-      eval $(thefuck --alias)
+      # ===== thefuck (static form of `thefuck --alias`) =====
+      fuck() {
+        TF_PYTHONIOENCODING=$PYTHONIOENCODING
+        export TF_SHELL=zsh TF_ALIAS=fuck
+        TF_SHELL_ALIASES=$(alias)
+        TF_HISTORY="$(fc -ln -10)"
+        export TF_SHELL_ALIASES TF_HISTORY PYTHONIOENCODING=utf-8
+        TF_CMD=$(thefuck THEFUCK_ARGUMENT_PLACEHOLDER "$@") && eval "$TF_CMD"
+        unset TF_HISTORY
+        export PYTHONIOENCODING=$TF_PYTHONIOENCODING
+        test -n "$TF_CMD" && print -s "$TF_CMD"
+      }
 
-      # ===== ngrok completion, only if ngrok is installed =====
-      if command -v ngrok &>/dev/null; then
-        eval "$(ngrok completion)"
-      fi
+      # Generated once during activation instead of launching ngrok per shell.
+      [ -r "${config.xdg.cacheHome}/zsh/ngrok-completion.zsh" ] && \
+        source "${config.xdg.cacheHome}/zsh/ngrok-completion.zsh"
 
       # ===== terraform completion =====
       autoload -U +X bashcompinit && bashcompinit
       complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
-      # ===== poetry, only if installed =====
-      if command -v poetry &>/dev/null; then
-        poetry config virtualenvs.in-project true
-      fi
-
       # ===== bun completions =====
       [ -s "${config.home.homeDirectory}/.bun/_bun" ] && source "${config.home.homeDirectory}/.bun/_bun"
-
-      # ===== start ssh-agent once per login, add keys from Keychain =====
-      if [[ -z "$SSH_AGENT_PID" ]] && ! pgrep -u "$USER" ssh-agent > /dev/null 2>&1; then
-        eval "$(ssh-agent -s)" > /dev/null 2>&1
-        ssh-add --apple-use-keychain > /dev/null 2>&1
-      fi
 
       git_current_branch() {
         git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||'
@@ -254,6 +257,17 @@ in
     };
   };
 
+  # One fast runtime manager for the global Node version and per-project
+  # overrides. Honor existing .nvmrc files during the migration from nvm.
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
+    globalConfig = {
+      tools.node = "22";
+      settings.idiomatic_version_file_enable_tools = [ "node" ];
+    };
+  };
+
   # Git identity, GPG-over-SSH commit signing, and LFS - previously a manual,
   # unmanaged ~/.gitconfig. lfs.enable both installs git-lfs and writes the
   # `[filter "lfs"]` block that `git lfs install` would otherwise write.
@@ -379,6 +393,19 @@ in
       if [ -d "$sf" ]; then
         $DRY_RUN_CMD /bin/ln -sfn \
           "../../../Library/Homebrew/../../completions/zsh/_brew" "$sf/_brew"
+      fi
+    '';
+
+  home.activation.ngrokZshCompletion =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      cache_dir="${config.xdg.cacheHome}/zsh"
+      if [ -x /opt/homebrew/bin/ngrok ]; then
+        $DRY_RUN_CMD /bin/mkdir -p "$cache_dir"
+        if [ -z "$DRY_RUN_CMD" ]; then
+          completion_tmp="$(/usr/bin/mktemp -t ngrok-completion)"
+          /opt/homebrew/bin/ngrok completion > "$completion_tmp"
+          /bin/mv "$completion_tmp" "$cache_dir/ngrok-completion.zsh"
+        fi
       fi
     '';
 }

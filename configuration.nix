@@ -1,4 +1,4 @@
-{ user, ... }:
+{ pkgs, user, ... }:
 
 {
   # Determinate already manages the Nix daemon, so nix-darwin shouldn't.
@@ -10,7 +10,18 @@
   system.primaryUser = user;
   users.users.${user} = {
     home = "/Users/${user}";
+    shell = pkgs.zsh;
   };
+  programs.zsh.enable = true;
+
+  # Use the macOS launchd-provided ssh-agent and let OpenSSH add keys on first
+  # use. Keeping these defaults system-wide avoids replacing the user's
+  # unmanaged ~/.ssh/config, which contains machine-specific host entries.
+  environment.etc."ssh/ssh_config.d/100-dotfiles.conf".text = ''
+    Host *
+      AddKeysToAgent yes
+      UseKeychain yes
+  '';
   system.stateVersion = 6;
   system.defaults = {
     NSGlobalDomain = {
@@ -73,7 +84,7 @@
       "opentofu" "sops" "talhelper" "siderolabs/tap/talosctl" "virt-manager" "qemu"
       "ansible" "dive" "go-task" "hashicorp/tap/terraform"
       # language runtimes & databases
-      "go" "node@22" "nvm" "maven" "postgresql@15" "postgresql@17" "mysql-client"
+      "go" "maven" "postgresql@15" "postgresql@17" "mysql-client"
       "monetdb" "mongosh" "openvino" "pipx"
       # security / misc one-offs
       "age" "bitwarden-cli" "ghidra" "wireguard-tools" "openvpn" "gemini-cli"
