@@ -19,12 +19,25 @@
       InitialKeyRepeat = 15;  # short delay before repeat
       _HIHideMenuBar = true;  # auto-hide the menu bar
       AppleShowAllExtensions = true;
+      "com.apple.swipescrolldirection" = true;  # natural scroll direction
+      "com.apple.trackpad.scaling" = 2.0;       # trackpad tracking speed
+      # Mouse tracking speed has no typed nix-darwin option (unlike trackpad
+      # scaling above), so it's set via home.activation.pointerTracking in
+      # home.nix instead of here.
     };
     dock.autohide = true;
+    dock.mru-spaces = false;             # don't auto-rearrange Spaces by recency
+    dock.show-recents = false;           # no recent-apps section in the Dock
+    dock.launchanim = false;             # no bounce on app launch
+    dock."minimize-to-application" = false; # minimized windows get their own Dock icon
     WindowManager.StandardHideWidgets = true;    # hide widgets on desktop
     WindowManager.StageManagerHideWidgets = true; # hide widgets in Stage Manager
     finder.FXPreferredViewStyle = "Nlsv";  # list view by default
     finder.CreateDesktop = false;          # clean desktop
+    finder.AppleShowAllFiles = true;       # show hidden files
+    finder.ShowPathbar = true;
+    finder.ShowStatusBar = true;
+    finder.FXDefaultSearchScope = "SCcf";  # search the current folder, not "This Mac"
     trackpad.Clicking = true;              # tap to click
     # Swipe between spaces with four fingers - Apple's factory default and the
     # conflict-free choice (three-finger swipes stay free for three-finger drag
