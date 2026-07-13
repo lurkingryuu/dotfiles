@@ -58,12 +58,57 @@
     onActivation.cleanup = "none";  # keep apps not listed here (protects existing installs)
     onActivation.autoUpdate = true;
     onActivation.extraFlags = [ "--force" ];
+    taps = [
+      "fluxcd/tap"
+      "minio/stable"
+      "siderolabs/tap"
+      "hashicorp/tap"
+    ];
     brews = [
       "herdr"
+      # core CLI & editor tools
+      "bat" "eza" "gh" "htop" "tmux" "wget" "zoxide" "curl" "cmake" "make"
+      "llvm" "boost" "thefuck" "pandoc" "graphviz" "imagemagick" "rsync"
+      "diff-pdf" "sl" "watch" "gcc"  # zsh aliases g++/gcc pin to gcc's g++-15/gcc-15
+      # cloud / infra / k8s / devops
+      "awscli" "azure-cli" "oci-cli" "cilium-cli" "cloudflared" "fluxcd/tap/flux"
+      "flyctl" "helmfile" "kubeconform" "kustomize" "minikube" "minio/stable/mc"
+      "opentofu" "sops" "talhelper" "siderolabs/tap/talosctl" "virt-manager" "qemu"
+      "ansible" "dive" "go-task" "hashicorp/tap/terraform"
+      # language runtimes & databases
+      "go" "node@22" "nvm" "maven" "postgresql@15" "postgresql@17" "mysql-client"
+      "monetdb" "mongosh" "openvino" "pipx"
+      # security / misc one-offs
+      "age" "bitwarden-cli" "ghidra" "wireguard-tools" "openvpn" "gemini-cli"
+      "hledger" "httpie" "hugo" "jemalloc" "netcat" "nmap" "subversion" "swaks"
+      "telnet" "tio" "neofetch" "faiss" "gperftools" "armadillo" "bison"
+      "cabextract" "makedepend" "parallel-hashmap" "patchelf" "robin-map" "spim"
+      "aarch64-elf-gcc"
     ];
     casks = [
       "wezterm"
       "claude-code"
+      "bitwarden"
+      "codex"
+      "dbeaver-community"
+      "font-noto-sans"
+      "font-noto-sans-devanagari"
+      "font-noto-serif"
+      "font-noto-serif-devanagari"
+      "ghidra"
+      "google-chrome"
+      "hiddenbar"
+      "iterm2"
+      "ngrok"
+      "opencode-desktop"
+      "orbstack"
+      "stats"
+      "temurin"
+      "temurin@17"
+      "visual-studio-code"
+      "wave"
+      "xquartz"
+      "zed"
     ];
   };
 }

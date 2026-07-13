@@ -90,24 +90,12 @@ If you clone it, review these before you run `bootstrap.sh`:
   All three have to match.
 - **CPU architecture**, `hostPlatform` in `configuration.nix` (see Prerequisites above).
 
-**Git identity:** this config deliberately does not set your git name or email.
-Git will stop your first commit and tell you to set them (`git config --global user.name "Your Name"` and `git config --global user.email you@example.com`).
-If you'd rather manage that declaratively, add this back to `home.nix` with your own identity:
+**Git identity:** `home.nix` sets `programs.git` with my own name, email, and SSH commit-signing config.
+If you clone this repo, replace those values with your own (or delete the `programs.git` block entirely and let Git stop your first commit to prompt you, via `git config --global user.name "Your Name"` and `git config --global user.email you@example.com`).
 
-```nix
-programs.git = {
-  enable = true;
-  settings.user = {
-    name = "Your Name";
-    email = "you@example.com";
-  };
-};
-```
-
-**Homebrew cleanup warning:** `configuration.nix` sets `homebrew.onActivation.cleanup = "zap"`.
-That means every time you switch, Homebrew removes any package or cask on your machine that isn't listed in the `brews` and `casks` arrays in `configuration.nix`.
-If you already have Homebrew stuff installed that isn't in that list, the first switch will uninstall it.
-Read through `brews` and `casks` before you run `bootstrap.sh` or `rebuild.sh` for the first time, and add anything you want to keep.
+**Homebrew cleanup warning:** `configuration.nix` currently sets `homebrew.onActivation.cleanup = "none"`, so Homebrew never removes anything not listed in `brews`/`casks` - it only installs what's declared and leaves everything else alone.
+The stricter `"zap"` (remove anything undeclared) is the eventual intent once the lists are known to be complete; see `AGENTS.md`.
+Read through `brews` and `casks` before you run `bootstrap.sh` or `rebuild.sh` for the first time regardless, since switching the mode to `"zap"` later will uninstall anything you haven't added.
 
 **About `herdr`:** it's in the `brews` list.
 It's a real public Homebrew formula (`brew info herdr` finds it in homebrew-core, no tap needed), so it will install fine.
