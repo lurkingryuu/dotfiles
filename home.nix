@@ -47,6 +47,7 @@ in
     "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
     "${config.home.homeDirectory}/.cargo/bin"
     "${config.home.homeDirectory}/.bun/bin"
+    "${config.home.homeDirectory}/google-cloud-sdk/bin"
     "${config.home.homeDirectory}/go/bin"
     "${config.home.homeDirectory}/Library/Application Support/JetBrains/Toolbox/scripts"
     "${config.home.homeDirectory}/.antigravity/antigravity/bin"
@@ -114,6 +115,10 @@ in
       # ===== terraform completion =====
       autoload -U +X bashcompinit && bashcompinit
       complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+      # ===== gcloud completion (SDK itself already on PATH via sessionPath) =====
+      [ -r "${config.home.homeDirectory}/google-cloud-sdk/completion.zsh.inc" ] && \
+        source "${config.home.homeDirectory}/google-cloud-sdk/completion.zsh.inc"
 
       # ===== bun completions =====
       [ -s "${config.home.homeDirectory}/.bun/_bun" ] && source "${config.home.homeDirectory}/.bun/_bun"
