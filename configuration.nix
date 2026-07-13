@@ -39,14 +39,11 @@
     finder.ShowStatusBar = true;
     finder.FXDefaultSearchScope = "SCcf";  # search the current folder, not "This Mac"
     trackpad.Clicking = true;              # tap to click
-    # Swipe between spaces with four fingers - Apple's factory default and the
-    # conflict-free choice (three-finger swipes stay free for three-finger drag
-    # and Look Up). System Settings treats these two as mutually exclusive, so we
-    # pin four-finger on and three-finger horizontal off rather than leaving both
-    # enabled (a UI-unreachable state) or leaving it to a manual toggle a rebuild
-    # can knock out. Flip the two values to move the gesture to three fingers.
+    # Swipe between spaces with both three and four fingers. These only
+    # conflict with three-finger drag (not enabled here), so both can be on
+    # simultaneously - this matches System Settings' own default behavior.
     trackpad.TrackpadFourFingerHorizSwipeGesture = 2;
-    trackpad.TrackpadThreeFingerHorizSwipeGesture = 0;
+    trackpad.TrackpadThreeFingerHorizSwipeGesture = 2;
   };
   nix-homebrew = {
     enable = true;
