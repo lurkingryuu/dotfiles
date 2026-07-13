@@ -85,27 +85,21 @@
     casks = [
       "wezterm"
       "claude-code"
-      "bitwarden"
       "codex"
-      "dbeaver-community"
       "font-noto-sans"
       "font-noto-sans-devanagari"
       "font-noto-serif"
       "font-noto-serif-devanagari"
       "ghidra"
       "google-chrome"
-      "hiddenbar"
       "iterm2"
       "ngrok"
-      "opencode-desktop"
       "orbstack"
       "stats"
       "temurin"
       "temurin@17"
       "visual-studio-code"
-      "wave"
       "xquartz"
-      "zed"
     ];
   };
 }
