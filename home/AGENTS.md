@@ -13,3 +13,13 @@
   If you see one, even if it is not caused by what you are working on right now, still get it fixed.
 
 
+# Assistant Tooling Defaults
+
+Use these defaults for all projects unless I explicitly ask otherwise:
+
+- Python: use `uv` for dependency and execution workflows.
+  - Prefer `uv add`, `uv sync`, and `uv run`.
+- Node.js: use `bun` for dependency and execution workflows.
+  - Prefer `bun add`, `bun run`, and `bunx`.
+
+Avoid defaulting to `pip`, `poetry`, `npm`, `pnpm`, or `yarn` unless requested.
