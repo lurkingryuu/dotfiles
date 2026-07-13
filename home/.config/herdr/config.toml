@@ -13,6 +13,9 @@ close_tab = "prefix+ampersand"
 workspace_picker = "prefix+w"
 goto             = "prefix+g"
 copy_mode  = "prefix+y"  # herdr's copy-mode entry key; copy-mode's own internal keys (v/space select, y/Enter copy, q/Esc cancel) aren't configurable
+last_pane  = "prefix+semicolon"  # tmux-style prefix+; jump back to the last active pane
+rename_tab = "prefix+comma"      # tmux-style prefix+, rename window
+cycle_pane_next = "prefix+o"     # tmux-style prefix+o cycle to next pane
 
 [ui]
 # Agents panel order: explicit choice of "spaces" (grouped by space, the default) over "priority".
