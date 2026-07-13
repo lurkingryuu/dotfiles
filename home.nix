@@ -357,6 +357,14 @@ in
       $DRY_RUN_CMD /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
     '';
 
+  # Mouse tracking speed (com.apple.mouse.scaling) has no typed nix-darwin
+  # system.defaults option - only trackpad scaling does - so it's set here
+  # directly, the same way as the other per-user defaults writes below.
+  home.activation.pointerTracking =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD /usr/bin/defaults write NSGlobalDomain com.apple.mouse.scaling -float 2
+    '';
+
   # Fix brew's zsh completion under nix-homebrew. nix-homebrew moves the Homebrew
   # repo into the (versioned) Nix store, so the completion at $HOMEBREW_PREFIX/
   # completions/zsh/_brew no longer exists and any leftover _brew symlink dangles
