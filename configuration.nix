@@ -91,7 +91,7 @@
       "hledger" "httpie" "hugo" "jemalloc" "netcat" "nmap" "subversion" "swaks"
       "telnet" "tio" "neofetch" "faiss" "gperftools" "armadillo" "bison"
       "cabextract" "makedepend" "parallel-hashmap" "patchelf" "robin-map" "spim"
-      "aarch64-elf-gcc" "btop"
+      "aarch64-elf-gcc" "btop" "tailscale"
     ];
     casks = [
       "wezterm"
@@ -111,6 +111,7 @@
       "temurin@17"
       "visual-studio-code"
       "xquartz"
-    ];
+      "stablyai/orca/orca"
+   ];
   };
 }
