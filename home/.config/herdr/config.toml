@@ -12,10 +12,22 @@ new_tab   = "prefix+c"
 close_tab = "prefix+ampersand"
 workspace_picker = "prefix+w"
 goto             = "prefix+g"
-copy_mode  = "prefix+y"  # herdr's copy-mode entry key; copy-mode's own internal keys (v/space select, y/Enter copy, q/Esc cancel) aren't configurable
+copy_mode  = "prefix+["  # tmux-style prefix+[ enter copy mode; copy-mode's own internal keys (v/space select, y/Enter copy, q/Esc cancel) aren't configurable
 last_pane  = "prefix+semicolon"  # tmux-style prefix+; jump back to the last active pane
 rename_tab = "prefix+comma"      # tmux-style prefix+, rename window
 cycle_pane_next = "prefix+o"     # tmux-style prefix+o cycle to next pane
+open_notification_target = "prefix+shift+o"  # moved off herdr's default prefix+o, which cycle_pane_next now owns
+previous_workspace = "prefix+("  # tmux-style prefix+( previous session
+next_workspace     = "prefix+)"  # tmux-style prefix+) next session
+switch_workspace = "prefix+shift+1..9"  # indexed workspace jump, mirrors switch_tab prefix+1..9
+focus_agent      = "prefix+alt+1..9"    # focus agent sidebar rows directly
+
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "lazygit"
+width = "80%"
+height = "80%"
 
 [ui]
 # Agents panel order: explicit choice of "spaces" (grouped by space, the default) over "priority".
