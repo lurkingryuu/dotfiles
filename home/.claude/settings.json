@@ -2,7 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "sonnet",
+  "model": "claude-fable-5",
   "hooks": {
     "SessionStart": [
       {
@@ -11,6 +11,120 @@
           {
             "type": "command",
             "command": "bash '/Users/karthik/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -r '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ] && [ -x '/Users/karthik/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/karthik/.orca/agent-hooks/claude-hook.sh'; else cat >/dev/null 2>&1 || :; fi",
             "timeout": 10
           }
         ]
@@ -45,7 +159,7 @@
       }
     }
   },
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
