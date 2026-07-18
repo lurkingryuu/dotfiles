@@ -132,7 +132,25 @@ in
       SAVEHIST=10000000
       setopt BANG_HIST HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS
       setopt HIST_FIND_NO_DUPS HIST_IGNORE_SPACE HIST_SAVE_NO_DUPS HIST_REDUCE_BLANKS
-      setopt HIST_VERIFY HIST_BEEP EXTENDED_HISTORY INC_APPEND_HISTORY SHARE_HISTORY
+      setopt HIST_VERIFY HIST_BEEP EXTENDED_HISTORY INC_APPEND_HISTORY
+      # No SHARE_HISTORY: each pane keeps its own session history (starts from the
+      # full histfile, appends to it immediately, but never live-imports other panes)
+
+      # herdr/wezterm emit CSI 1;3/1;5 sequences for option/ctrl arrows; without
+      # these bindings zsh prints fragments like ";3D" instead of jumping words
+      bindkey "^[[1;3D" backward-word   # option+left
+      bindkey "^[[1;3C" forward-word    # option+right
+      bindkey "^[[1;5D" backward-word   # ctrl+left
+      bindkey "^[[1;5C" forward-word    # ctrl+right
+      bindkey "^[[H"    beginning-of-line
+      bindkey "^[[F"    end-of-line
+      bindkey "^[[3~"   delete-char     # fn+delete
+      bindkey "^[[3;3~" kill-word       # option+fn+delete
+
+      # ctrl+x ctrl+e opens the current (multiline) command in $EDITOR
+      autoload -Uz edit-command-line
+      zle -N edit-command-line
+      bindkey "^X^E" edit-command-line
     '';
     shellAliases = {
       ".." = "cd ..";
