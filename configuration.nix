@@ -95,14 +95,16 @@
     ];
     casks = [
       "wezterm"
-      "claude-code"
+      "claude-code@latest"
       "codex"
+      "fluidvoice"
       "font-noto-sans"
       "font-noto-sans-devanagari"
       "font-noto-serif"
       "font-noto-serif-devanagari"
       "ghidra"
       "google-chrome"
+      "handy"
       "iterm2"
       "ngrok"
       "orbstack"
