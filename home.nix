@@ -10,11 +10,33 @@ in
   home.stateVersion = "24.11";
   home.packages = with pkgs; [
     # cli i use constantly
-    ripgrep   # fast search
-    fd        # fast find
-    jq        # json on the command line
+    ripgrep       # fast search
+    fd            # fast find
+    jq            # json on the command line
     lazygit
     neovim
+    android-tools # adb, fastboot
+
+    # neovim's ide layer. servers and formatters live here rather than in
+    # mason.nvim so the toolchain stays declarative like everything else.
+    # deliberately absent: rust-analyzer (rustup already ships one on
+    # ~/.cargo/bin), clangd/clang-format (homebrew llvm already on PATH),
+    # and a jdk 21+ for jdtls (temurin-25 is installed under /Library/Java).
+    tree-sitter                   # nvim-treesitter main branch compiles parsers with this
+    lua-language-server
+    stylua
+    pyright
+    ruff                          # python lint + format, both through the same binary
+    gopls
+    delve                         # go debugger, for nvim-dap later
+    typescript-language-server
+    vscode-langservers-extracted  # json, html, css, eslint
+    terraform-ls
+    marksman                      # markdown headings, links, backlinks
+    texlab
+    prettierd                     # long-lived prettier daemon, fast enough for format-on-save
+    jdt-language-server
+
     # the font everything renders in
     nerd-fonts.hack
   ];
